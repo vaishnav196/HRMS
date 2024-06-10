@@ -43,59 +43,18 @@ namespace HRMS
             }
         }
 
-        //private void LoadLeaveRequests()
-        //{
-        //    try
-        //    {
-        //        conn.Open();
-        //        string query = "SELECT EmpID, Name, Email, FromDate, ToDate, AbsentDays FROM LeaveRequests WHERE Status = 'Pending'";
-        //        SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-        //        DataTable dt = new DataTable();
-        //        adapter.Fill(dt);
-
-        //        if (dt.Rows.Count > 0)
-        //        {
-        //            GridView1.DataSource = dt;
-        //            GridView1.DataBind();
-        //        }
-        //        else
-        //        {
-        //            Response.Write("<script>alert('No pending leave requests found.')</script>");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Response.Write($"<script>alert('Error: {ex.Message}')</script>");
-        //    }
-        //    finally
-        //    {
-        //        conn.Close();
-        //    }
-        //}
-
-
         private void LoadLeaveRequests()
         {
             try
             {
                 conn.Open();
-                string query = "SELECT EmpID, Name, Email, FromDate, ToDate, AbsentDays FROM LeaveRequests WHERE Status = 'Pending'";
+                string query = "SELECT EmpID, Name, Email, FromDate, ToDate, AbsentDays, Status FROM LeaveRequests WHERE Status = 'Pending'";
                 SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
-                GridView1.DataSource = null;  // Clear existing data
+                GridView1.DataSource = dt;
                 GridView1.DataBind();
-
-                if (dt.Rows.Count > 0)
-                {
-                    GridView1.DataSource = dt;
-                    GridView1.DataBind();
-                }
-                else
-                {
-                    Response.Write("<script>alert('No pending leave requests found.')</script>");
-                }
             }
             catch (Exception ex)
             {
@@ -118,12 +77,7 @@ namespace HRMS
                 cmd.Parameters.AddWithValue("@ToDate", toDate);
                 cmd.ExecuteNonQuery();
 
-                // Remove the approved request from GridView
-                LoadLeaveRequests();
-
-              
-
-                Response.Write("<script>alert('Leave request approved.')</script>");
+                UpdateGridViewRow(empId, fromDate, toDate, "Approved");
             }
             catch (Exception ex)
             {
@@ -146,10 +100,7 @@ namespace HRMS
                 cmd.Parameters.AddWithValue("@ToDate", toDate);
                 cmd.ExecuteNonQuery();
 
-                // Remove the rejected request from GridView
-                LoadLeaveRequests();
-
-                Response.Write("<script>alert('Leave request rejected.')</script>");
+                UpdateGridViewRow(empId, fromDate, toDate, "Rejected");
             }
             catch (Exception ex)
             {
@@ -161,63 +112,16 @@ namespace HRMS
             }
         }
 
-        //private void ApproveLeaveRequest(string empId, string fromDate, string toDate)
-        //{
-        //    try
-        //    {
-        //        conn.Open();
-        //        SqlCommand cmd = new SqlCommand("UPDATE LeaveRequests SET Status = 'Approved' WHERE EmpID = @EmpID AND FromDate = @FromDate AND ToDate = @ToDate", conn);
-        //        cmd.Parameters.AddWithValue("@EmpID", empId);
-        //        cmd.Parameters.AddWithValue("@FromDate", fromDate);
-        //        cmd.Parameters.AddWithValue("@ToDate", toDate);
-        //        cmd.ExecuteNonQuery();
-
-        //        // Update leave balance
-        //        SqlCommand updateBalanceCmd = new SqlCommand("UPDATE Emp SET LeaveBalance = LeaveBalance - (SELECT DATEDIFF(day, @FromDate, @ToDate) + 1 WHERE EmpID = @EmpID)", conn);
-        //        updateBalanceCmd.Parameters.AddWithValue("@EmpID", empId);
-        //        updateBalanceCmd.Parameters.AddWithValue("@FromDate", fromDate);
-        //        updateBalanceCmd.Parameters.AddWithValue("@ToDate", toDate);
-        //        updateBalanceCmd.ExecuteNonQuery();
-
-        //        Response.Write("<script>alert('Leave request approved.')</script>");
-
-        //        // Refresh gridview
-        //        LoadLeaveRequests();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Response.Write($"<script>alert('Error: {ex.Message}')</script>");
-        //    }
-        //    finally
-        //    {
-        //        conn.Close();
-        //    }
-        //}
-
-        //private void RejectLeaveRequest(string empId, string fromDate, string toDate)
-        //{
-        //    try
-        //    {
-        //        conn.Open();
-        //        SqlCommand cmd = new SqlCommand("UPDATE LeaveRequests SET Status = 'Rejected' WHERE EmpID = @EmpID AND FromDate = @FromDate AND ToDate = @ToDate", conn);
-        //        cmd.Parameters.AddWithValue("@EmpID", empId);
-        //        cmd.Parameters.AddWithValue("@FromDate", fromDate);
-        //        cmd.Parameters.AddWithValue("@ToDate", toDate);
-        //        cmd.ExecuteNonQuery();
-
-        //        Response.Write("<script>alert('Leave request rejected.')</script>");
-
-        //        // Refresh gridview
-        //        LoadLeaveRequests();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Response.Write($"<script>alert('Error: {ex.Message}')</script>");
-        //    }
-        //    finally
-        //    {
-        //        conn.Close();
-        //    }
-        //}
+        private void UpdateGridViewRow(string empId, string fromDate, string toDate, string status)
+        {
+            foreach (GridViewRow row in GridView1.Rows)
+            {
+                if (row.Cells[0].Text == empId && row.Cells[3].Text == fromDate && row.Cells[4].Text == toDate)
+                {
+                    row.Cells[6].Text = status;
+                    break;
+                }
+            }
+        }
     }
 }

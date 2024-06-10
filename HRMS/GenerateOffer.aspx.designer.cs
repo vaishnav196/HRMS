@@ -24,6 +24,15 @@ namespace HRMS
         protected global::System.Web.UI.WebControls.TextBox txtEmpId;
 
         /// <summary>
+        /// btnFetchDetails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnFetchDetails;
+
+        /// <summary>
         /// txtName control.
         /// </summary>
         /// <remarks>

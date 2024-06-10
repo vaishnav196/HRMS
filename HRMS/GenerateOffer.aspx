@@ -8,7 +8,12 @@
     <div class="container w-50">
         <div class="form-group">
             <label for="empId">Employee ID</label>
-            <asp:TextBox ID="txtEmpId" runat="server" CssClass="form-control" placeholder="Enter Employee ID" class="form-control w-50"></asp:TextBox>
+            <div class="input-group">
+                <asp:TextBox ID="txtEmpId" runat="server" CssClass="form-control" placeholder="Enter Employee ID" class="form-control w-50"></asp:TextBox>
+                <div class="input-group-append">
+                    <asp:Button ID="btnFetchDetails" runat="server" Text="Fetch Details" CssClass="btn btn-primary" OnClick="btnFetchDetails_Click" />
+                </div>
+            </div>
         </div>
         <div class="form-group">
             <label for="name">Name</label>

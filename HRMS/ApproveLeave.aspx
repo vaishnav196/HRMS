@@ -7,8 +7,8 @@
     <div class="card">
         <div class="card-header">
             <h3 class="">Leave Approval</h3>
-            <div class="container-fluid">
-                <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" Width="999px" OnRowCommand="GridView1_RowCommand" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black">
+            <div class="">
+                <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" Width="1229px" OnRowCommand="GridView1_RowCommand" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black">
                     <Columns>
                         <asp:BoundField DataField="EmpID" HeaderText="Emp ID" />
                         <asp:BoundField DataField="Name" HeaderText="Name" />
@@ -16,10 +16,11 @@
                         <asp:BoundField DataField="FromDate" HeaderText="From" />
                         <asp:BoundField DataField="ToDate" HeaderText="To" />
                         <asp:BoundField DataField="AbsentDays" HeaderText="Absent Days" />
+                        <asp:BoundField DataField="Status" HeaderText="Status" />
                         <asp:TemplateField HeaderText="Action">
                             <ItemTemplate>
-                                <asp:Button ID="btnApprove" runat="server" Text="Approve" CommandName="Approve" CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-success" />
-                                <asp:Button ID="btnReject" runat="server" Text="Reject" CommandName="Reject" CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-danger" />
+                                <asp:Button ID="btnApprove" runat="server" Text="Approve" CommandName="Approve" CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-success btn-sm" />
+                                <asp:Button ID="btnReject" runat="server" Text="Reject" CommandName="Reject" CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-danger btn-sm" />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>

@@ -21,6 +21,43 @@ namespace HRMS
             }
         }
 
+        protected void btnFetchDetails_Click(object sender, EventArgs e)
+        {
+            string empId = txtEmpId.Text;
+            FetchEmployeeDetails(empId);
+        }
+
+        private void FetchEmployeeDetails(string empId)
+        {
+            string connectionString = "Data Source=DESKTOP-567PV48\\SQLEXPRESS01;Initial Catalog=Hrms;Integrated Security=True;Encrypt=False"; // Replace with your actual connection string
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT Name, Email, DateOfJoining, Salary FROM Employees WHERE EmpID = @EmpID";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@EmpID", empId);
+
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        txtName.Text = reader["Name"].ToString();
+                        txtEmail.Text = reader["Email"].ToString();
+                        txtDateOfJoining.Text = Convert.ToDateTime(reader["DateOfJoining"]).ToString("yyyy-MM-dd");
+                        txtSalary.Text = reader["Salary"].ToString();
+                    }
+                    else
+                    {
+                        // Handle case where no employee was found with the given ID
+                        Response.Write("<script>alert('Employee not found.')</script>");
+                    }
+                }
+            }
+        }
+
         protected void btnGenerate_Click(object sender, EventArgs e)
         {
             // Retrieve input data
