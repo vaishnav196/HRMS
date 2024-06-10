@@ -29,8 +29,7 @@ namespace HRMS
                 if (reader.Read())
                 {
                     empName.Text = reader["Name"].ToString();
-                    // Assuming Bank Name, Contact No, and Bank Account No are stored in different columns
-                    bankName.Text = "Yes Bank"; // Placeholder, adjust accordingly
+                    bankName.Text = "ICICI Bank"; // Placeholder, adjust accordingly
                     contactNo.Text = reader["Contact"].ToString();
                     bankAccNo.Text = "123456789"; // Placeholder, adjust accordingly
                     email.Text = reader["Email"].ToString();
@@ -60,101 +59,93 @@ namespace HRMS
             SavePaySlipToDatabase(pdfFilePath);
         }
 
-        //private void GeneratePDF(string pdfFilePath)
-        //{
-        //    Document document = new Document();
-        //    PdfWriter.GetInstance(document, new FileStream(pdfFilePath, FileMode.Create));
-        //    document.Open();
-
-        //    document.Add(new Paragraph("Pay Slip"));
-        //    document.Add(new Paragraph("Employee Name: " + empName.Text));
-        //    document.Add(new Paragraph("Designation: " + designation.Text));
-        //    document.Add(new Paragraph("Monthly Salary: ₹" + monthlySalary.Text));
-        //    document.Add(new Paragraph("Leaves Taken: " + leavesTaken.Text));
-        //    document.Add(new Paragraph("Calculated Salary: " + calculatedSalary.Text));
-        //    document.Close();
-        //}
-
         private void GeneratePDF(string pdfFilePath)
         {
-            Document document = new Document(PageSize.A4, 25, 25, 30, 30);
-            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(pdfFilePath, FileMode.Create));
+            Document document = new Document(PageSize.A4);
+            PdfWriter.GetInstance(document, new FileStream(pdfFilePath, FileMode.Create));
             document.Open();
 
-            // Add header
-            PdfPTable headerTable = new PdfPTable(1);
-            headerTable.WidthPercentage = 100;
-            PdfPCell headerCell = new PdfPCell(new Phrase("Masstech", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
-            headerCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            headerCell.Border = Rectangle.NO_BORDER;
-            headerTable.AddCell(headerCell);
+            // Adding the company logo
+            Image logo = Image.GetInstance(Server.MapPath("~/Images/logo.png")); // Adjust the path accordingly
+            logo.ScalePercent(24f);
+            logo.Alignment = Element.ALIGN_CENTER;
+            document.Add(logo);
 
-            headerCell = new PdfPCell(new Phrase("Business Solutions", new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL)));
-            headerCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            headerCell.Border = Rectangle.NO_BORDER;
-            headerTable.AddCell(headerCell);
+            // Adding company name
+            Paragraph companyName = new Paragraph("Masstech Business Solutions", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD, BaseColor.BLUE));
+            companyName.Alignment = Element.ALIGN_CENTER;
+            document.Add(companyName);
 
-            document.Add(headerTable);
+            // Adding Payslip title
+            Paragraph payslipTitle = new Paragraph("Payslip for the Month " + month.SelectedValue + " of 2023", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
+            payslipTitle.Alignment = Element.ALIGN_CENTER;
+            payslipTitle.SpacingAfter = 20f;
+            document.Add(payslipTitle);
 
-            // Add payslip details
-            document.Add(new Paragraph("\nPayslip for the Month of " + month.SelectedValue, new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
-            document.Add(new Paragraph("\n"));
+            // Adding Employee details
+            PdfPTable employeeTable = new PdfPTable(2);
+            employeeTable.WidthPercentage = 100;
 
-            // Add employee details
-            PdfPTable infoTable = new PdfPTable(2);
-            infoTable.WidthPercentage = 100;
-            infoTable.AddCell(GetCell("NAME OF EMPLOYEE: " + empName.Text, PdfPCell.ALIGN_LEFT));
-            infoTable.AddCell(GetCell("DESIGNATION: " + designation.Text, PdfPCell.ALIGN_LEFT));
-            infoTable.AddCell(GetCell("BANK NAME: " + bankName.Text, PdfPCell.ALIGN_LEFT));
-            infoTable.AddCell(GetCell("EMPLOYEE EMAIL: " + email.Text, PdfPCell.ALIGN_LEFT));
-            infoTable.AddCell(GetCell("IFSC CODE: ICIC0000092", PdfPCell.ALIGN_LEFT)); // Hardcoded value
-            infoTable.AddCell(GetCell("DATE OF JOINING: " + dateOfJoining.Text, PdfPCell.ALIGN_LEFT));
-            infoTable.AddCell(GetCell("BANK ACCOUNT NO: " + bankAccNo.Text, PdfPCell.ALIGN_LEFT));
-            infoTable.AddCell(GetCell("CONTACT NO: " + contactNo.Text, PdfPCell.ALIGN_LEFT));
-            infoTable.AddCell(GetCell("PAN: FGKPB0088L", PdfPCell.ALIGN_LEFT)); // Hardcoded value
-            infoTable.AddCell(GetCell("DAYS IN MONTH: " + workingDays.Text, PdfPCell.ALIGN_LEFT));
-            infoTable.AddCell(GetCell("AADHAR: 7902 8178 5003", PdfPCell.ALIGN_LEFT)); // Hardcoded value
-            infoTable.AddCell(GetCell("UAN: NA", PdfPCell.ALIGN_LEFT)); // Hardcoded value
-            infoTable.AddCell(GetCell("LEAVE TAKEN: " + leavesTaken.Text, PdfPCell.ALIGN_LEFT));
-            document.Add(infoTable);
+            AddCellToTable(employeeTable, "NAME OF EMPLOYEE:", empName.Text);
+            AddCellToTable(employeeTable, "DESIGNATION:", designation.Text);
+            AddCellToTable(employeeTable, "BANK NAME:", bankName.Text);
+            AddCellToTable(employeeTable, "EMPLOYEE EMAIL:", email.Text);
+            AddCellToTable(employeeTable, "IFSC CODE:", "ICIC0000092");
+            AddCellToTable(employeeTable, "DATE OF JOINING:", dateOfJoining.Text);
+            AddCellToTable(employeeTable, "BANK ACCOUNT NO:", bankAccNo.Text);
+            AddCellToTable(employeeTable, "CONTACT NO:", contactNo.Text);
+            AddCellToTable(employeeTable, "PAN:", "FGKPB0088L");
+            AddCellToTable(employeeTable, "DAYS IN MONTH:", workingDays.Text);
+            AddCellToTable(employeeTable, "AADHAR:", "7902 8178 5003");
+            AddCellToTable(employeeTable, "UAN:", "NA");
+            AddCellToTable(employeeTable, "LEAVE TAKEN:", leavesTaken.Text);
 
-            // Add salary details
-            PdfPTable salaryTable = new PdfPTable(4);
+            document.Add(employeeTable);
+
+            // Adding Salary details
+            PdfPTable salaryTable = new PdfPTable(3);
             salaryTable.WidthPercentage = 100;
-            salaryTable.AddCell(GetCell("GROSS SALARY", PdfPCell.ALIGN_CENTER, true));
-            salaryTable.AddCell(GetCell("AMOUNT", PdfPCell.ALIGN_CENTER, true));
-            salaryTable.AddCell(GetCell("DEDUCTIONS", PdfPCell.ALIGN_CENTER, true));
-            salaryTable.AddCell(GetCell("NET SALARY", PdfPCell.ALIGN_CENTER, true));
+            salaryTable.SpacingBefore = 20f;
+            salaryTable.SpacingAfter = 20f;
 
-            salaryTable.AddCell(GetCell(monthlySalary.Text, PdfPCell.ALIGN_CENTER));
-            salaryTable.AddCell(GetCell(monthlySalary.Text, PdfPCell.ALIGN_CENTER));
-            salaryTable.AddCell(GetCell((decimal.Parse(monthlySalary.Text) - decimal.Parse(calculatedSalary.Text)).ToString("F2"), PdfPCell.ALIGN_CENTER));
-            salaryTable.AddCell(GetCell(calculatedSalary.Text, PdfPCell.ALIGN_CENTER));
+            AddCellToTable(salaryTable, "GROSS SALARY", "AMOUNT", "DEDUCTION");
+            AddCellToTable(salaryTable, "Basic", "5,250", "PF");
+            AddCellToTable(salaryTable, "HRA", "2,625", "Professional Tax");
+            AddCellToTable(salaryTable, "Travel Allowance", "1,600", "TDS");
+            AddCellToTable(salaryTable, "Bonus", "700", "");
+            AddCellToTable(salaryTable, "Special Allowance", "3,275", "");
+            AddCellToTable(salaryTable, "Medical Re-imbursement", "1,250", "");
+
+            decimal grossSalary = decimal.Parse(monthlySalary.Text);
+            decimal netSalary = decimal.Parse(calculatedSalary.Text);
+            decimal deductions = grossSalary - netSalary;
+
+            AddCellToTable(salaryTable, "GROSS SALARY", grossSalary.ToString("F2"), "TOTAL DEDUCTION");
+            AddCellToTable(salaryTable, "NET SALARY PAID", netSalary.ToString("F2"), deductions.ToString("F2"));
 
             document.Add(salaryTable);
 
+            // Adding Footer
+            Paragraph footer = new Paragraph("This is a computerised generated salary slip and does not require authentication", new Font(Font.FontFamily.HELVETICA, 8, Font.ITALIC));
+            footer.Alignment = Element.ALIGN_CENTER;
+            document.Add(footer);
+
             document.Close();
-            writer.Close();
         }
 
-
-        private PdfPCell GetCell(string text, int alignment, bool isBold = false, int colspan = 1)
+        private void AddCellToTable(PdfPTable table, string text1, string text2, string text3 = "")
         {
-            Font font;
-            if (isBold)
-            {
-                font = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-            }
-            else
-            {
-                font = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
-            }
+            PdfPCell cell1 = new PdfPCell(new Phrase(text1));
+            cell1.Border = Rectangle.NO_BORDER;
+            table.AddCell(cell1);
 
-            PdfPCell cell = new PdfPCell(new Phrase(text, font));
-            cell.HorizontalAlignment = alignment;
-            cell.Border = PdfPCell.NO_BORDER;
-            cell.Colspan = colspan;
-            return cell;
+            PdfPCell cell2 = new PdfPCell(new Phrase(text2));
+            cell2.Border = Rectangle.NO_BORDER;
+            table.AddCell(cell2);
+
+            PdfPCell cell3 = new PdfPCell(new Phrase(text3));
+            cell3.Border = Rectangle.NO_BORDER;
+            table.AddCell(cell3);
         }
 
         private void SendEmail(string pdfFilePath)
@@ -171,8 +162,6 @@ namespace HRMS
             client.Send(mail);
         }
 
-
-
         private void SavePaySlipToDatabase(string pdfFilePath)
         {
             string connStr = ConfigurationManager.ConnectionStrings["hrms"].ConnectionString;
@@ -187,6 +176,5 @@ namespace HRMS
                 cmd.ExecuteNonQuery();
             }
         }
-
     }
 }

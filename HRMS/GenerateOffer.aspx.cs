@@ -33,7 +33,7 @@ namespace HRMS
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT Name, Email, DateOfJoining, Salary FROM Employees WHERE EmpID = @EmpID";
+                string query = "SELECT Name, Email, DateOfJoining, Salary FROM Emp WHERE EmpID = @EmpID";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {

@@ -81,36 +81,14 @@
             <div class="invoice-header">
                 <div class='invoice-info'>
                     <div class="row justify-content-center">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="TextBox1">Enter Employee ID:</label>
-                                <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control"></asp:TextBox>
-                            </div>
-                        </div>
+                        
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-md-6">
-                            <div class="form-group my-5 text-center">
-                                <asp:Button ID="Button3" runat="server" Text="Fetch Employee" CssClass="btn btn-primary" OnClick="FetchEmployeeDetails" />
-                            </div>
-                        </div>
+                       
                     </div>
                     <h1>Masstech</h1>
                     <p>Business Solutions</p>
-                    <h2>Payslip for the Month of <asp:DropDownList ID="month" runat="server">
-                        <asp:ListItem Text="January" Value="January"></asp:ListItem>
-                        <asp:ListItem Text="February" Value="February"></asp:ListItem>
-                        <asp:ListItem Text="March" Value="March"></asp:ListItem>
-                        <asp:ListItem Text="April" Value="April"></asp:ListItem>
-                        <asp:ListItem Text="May" Value="May"></asp:ListItem>
-                        <asp:ListItem Text="June" Value="June"></asp:ListItem>
-                        <asp:ListItem Text="July" Value="July"></asp:ListItem>
-                        <asp:ListItem Text="August" Value="August"></asp:ListItem>
-                        <asp:ListItem Text="September" Value="September"></asp:ListItem>
-                        <asp:ListItem Text="October" Value="October"></asp:ListItem>
-                        <asp:ListItem Text="November" Value="November"></asp:ListItem>
-                        <asp:ListItem Text="December" Value="December"></asp:ListItem>
-                    </asp:DropDownList></h2>
+                   
                 </div>
             </div>
 
@@ -142,10 +120,7 @@
                             <td><strong>AADHAR:</strong> 7902 8178 5003</td>
                             <td><strong>UAN:</strong> NA</td>
                         </tr>
-                        <tr>
-                            <td></td>
-                            <td><strong>LEAVE TAKEN:</strong><asp:TextBox ID="TextBox2" runat="server"></asp:TextBox></td>
-                        </tr>
+                      
                     </table>
                 </asp:Panel>
             </div>
