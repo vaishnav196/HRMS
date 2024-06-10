@@ -109,12 +109,12 @@ namespace HRMS
             salaryTable.SpacingAfter = 20f;
 
             AddCellToTable(salaryTable, "GROSS SALARY", "AMOUNT", "DEDUCTION");
-            AddCellToTable(salaryTable, "Basic", "5,250", "PF");
-            AddCellToTable(salaryTable, "HRA", "2,625", "Professional Tax");
-            AddCellToTable(salaryTable, "Travel Allowance", "1,600", "TDS");
-            AddCellToTable(salaryTable, "Bonus", "700", "");
-            AddCellToTable(salaryTable, "Special Allowance", "3,275", "");
-            AddCellToTable(salaryTable, "Medical Re-imbursement", "1,250", "");
+            AddCellToTable(salaryTable, "Basic", "5,000", "PF");
+            AddCellToTable(salaryTable, "HRA", "00.00", "Professional Tax");
+            AddCellToTable(salaryTable, "Travel Allowance", "00.00", "TDS");
+            AddCellToTable(salaryTable, "Bonus", "00.00", "");
+            AddCellToTable(salaryTable, "Special Allowance", "00.00", "");
+            AddCellToTable(salaryTable, "Medical Re-imbursement", "00.00", "");
 
             decimal grossSalary = decimal.Parse(monthlySalary.Text);
             decimal netSalary = decimal.Parse(calculatedSalary.Text);
