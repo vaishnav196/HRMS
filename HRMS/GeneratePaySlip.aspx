@@ -5,7 +5,7 @@
     <div class="container w-50">
         <div class="card">
             <div class="card-header">
-                <h3>Employee Salary Calculator</h3>
+                <h3 class="text-center">Employee Salary Calculator</h3>
             </div>
             <div class="card-body">
                 <div class="form-group ms-5">
@@ -50,7 +50,7 @@
                     <asp:TextBox ID="workingDays" runat="server" CssClass="form-control w-75"></asp:TextBox>
                 </div>
                 <div class="form-group ">
-                    <label for="leavesTaken">Leaves Taken:</label>
+                    <label for="leavesTaken">Absent leaves:</label>
                     <asp:TextBox ID="leavesTaken" runat="server" CssClass="form-control w-75"></asp:TextBox>
                 </div>
                 <asp:Button ID="calculate" runat="server" CssClass="btn btn-danger" Text="Calculate" OnClick="calculate_Click" />

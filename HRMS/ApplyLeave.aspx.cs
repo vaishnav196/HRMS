@@ -51,7 +51,7 @@ namespace HRMS
                 conn.Open();
 
                 // Fetch employee details
-                string getEmpDetailsQuery = "SELECT EmpID, Name, LeaveBalance FROM Emp WHERE Email = @Email";
+                string getEmpDetailsQuery = "SELECT EmpID, Name, LeaveBalance, DateOfJoining FROM Emp WHERE Email = @Email";
                 SqlCommand getEmpDetailsCmd = new SqlCommand(getEmpDetailsQuery, conn);
                 getEmpDetailsCmd.Parameters.AddWithValue("@Email", email);
 
@@ -64,13 +64,25 @@ namespace HRMS
 
                 int empId = reader.GetInt32(0);
                 string empName = reader.GetString(1);
-                int leaveBalance = reader.GetInt32(2);
+                int currentLeaveBalance = reader.GetInt32(2);
+                DateTime dateOfJoining = reader.GetDateTime(3);
                 reader.Close();
 
                 int totalDays = (toDate - fromDate).Days + 1;
                 int workingDays = CalculateWorkingDays(fromDate, toDate);
-                int absentDays = workingDays > leaveBalance ? workingDays - leaveBalance : 0;
-                int newLeaveBalance = leaveBalance - workingDays >= 0 ? leaveBalance - workingDays : 0;
+
+                // Calculate accumulated leaves
+                int accumulatedLeaves = CalculateAccumulatedLeaves(dateOfJoining, DateTime.Now);
+
+                // Deduct leaves from accumulated balance
+                int newLeaveBalance = currentLeaveBalance - workingDays;
+                int absentDays = 0;
+
+                if (newLeaveBalance < 0)
+                {
+                    absentDays = Math.Abs(newLeaveBalance);
+                    newLeaveBalance = 0;
+                }
 
                 // Check if there's already a leave request for the same date range
                 string checkLeaveQuery = "SELECT COUNT(*) FROM LeaveRequests WHERE EmpID = @EmpID AND FromDate = @FromDate AND ToDate = @ToDate";
@@ -109,9 +121,17 @@ namespace HRMS
                     applyLeaveCmd.ExecuteNonQuery();
                 }
 
+                // Update the leave balance in the employee record
+                string updateLeaveBalanceQuery = "UPDATE Emp SET LeaveBalance = @NewLeaveBalance WHERE EmpID = @EmpID";
+                SqlCommand updateLeaveBalanceCmd = new SqlCommand(updateLeaveBalanceQuery, conn);
+                updateLeaveBalanceCmd.Parameters.AddWithValue("@NewLeaveBalance", newLeaveBalance);
+                updateLeaveBalanceCmd.Parameters.AddWithValue("@EmpID", empId);
+                updateLeaveBalanceCmd.ExecuteNonQuery();
+
                 // Update the labels
                 Label1.Text = newLeaveBalance.ToString();
                 Label2.Text = absentDays.ToString();
+                LoadLeaveBalance();
 
                 Response.Write("<script>alert('Leave applied successfully.')</script>");
             }
@@ -141,12 +161,26 @@ namespace HRMS
             {
                 conn.Open();
 
-                string getLeaveBalanceQuery = "SELECT LeaveBalance FROM Emp WHERE Email = @Email";
+                string getLeaveBalanceQuery = "SELECT LeaveBalance, DateOfJoining FROM Emp WHERE Email = @Email";
                 SqlCommand getLeaveBalanceCmd = new SqlCommand(getLeaveBalanceQuery, conn);
                 getLeaveBalanceCmd.Parameters.AddWithValue("@Email", email);
 
-                int leaveBalance = (int)getLeaveBalanceCmd.ExecuteScalar();
-                Label1.Text = leaveBalance.ToString();
+                SqlDataReader reader = getLeaveBalanceCmd.ExecuteReader();
+                if (!reader.Read())
+                {
+                    Response.Write("<script>alert('Employee not found.')</script>");
+                    return;
+                }
+
+                int leaveBalance = reader.GetInt32(0);
+                DateTime dateOfJoining = reader.GetDateTime(1);
+                reader.Close();
+
+                // Calculate accumulated leaves
+                int accumulatedLeaves = CalculateAccumulatedLeaves(dateOfJoining, DateTime.Now);
+
+                // Display the total leave balance
+                Label1.Text = (leaveBalance + accumulatedLeaves).ToString();
             }
             catch (Exception ex)
             {
@@ -173,6 +207,12 @@ namespace HRMS
             }
 
             return workingDays;
+        }
+
+        private int CalculateAccumulatedLeaves(DateTime dateOfJoining, DateTime currentDate)
+        {
+            int monthsPassed = ((currentDate.Year - dateOfJoining.Year) * 12) + currentDate.Month - dateOfJoining.Month;
+            return monthsPassed * 2;
         }
     }
 }

@@ -4,7 +4,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server" >
     <body style=" background-color:azure;" >
          <div style="padding-top:200px; background-color:azure;">
-      <h1 class="text-center  mt-5 ">Welcome To HR Portal</h1>
+      <h1 class="text-center  text-danger mt-5 ">Welcome To HR Portal</h1>
  </div>
     </body>
    

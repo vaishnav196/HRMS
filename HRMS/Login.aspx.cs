@@ -46,6 +46,7 @@ namespace HRMS
                         Session["Password"] = password;
                         Session["DateOfJoining"] = dateOfJoining;
                         Session["MyUser"] = email;
+
                         Response.Write($"<script>alert('Employee registered Successfully !!!')</script>");
                         Response.Redirect("Login.aspx");
                     }

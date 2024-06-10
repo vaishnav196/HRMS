@@ -118,17 +118,12 @@ namespace HRMS
                 cmd.Parameters.AddWithValue("@ToDate", toDate);
                 cmd.ExecuteNonQuery();
 
-                // Update leave balance
-                SqlCommand updateBalanceCmd = new SqlCommand("UPDATE Emp SET LeaveBalance = LeaveBalance - (SELECT DATEDIFF(day, @FromDate, @ToDate) + 1 WHERE EmpID = @EmpID)", conn);
-                updateBalanceCmd.Parameters.AddWithValue("@EmpID", empId);
-                updateBalanceCmd.Parameters.AddWithValue("@FromDate", fromDate);
-                updateBalanceCmd.Parameters.AddWithValue("@ToDate", toDate);
-                updateBalanceCmd.ExecuteNonQuery();
+                // Remove the approved request from GridView
+                LoadLeaveRequests();
+
+              
 
                 Response.Write("<script>alert('Leave request approved.')</script>");
-
-                // Refresh gridview
-                LoadLeaveRequests();
             }
             catch (Exception ex)
             {
@@ -151,10 +146,10 @@ namespace HRMS
                 cmd.Parameters.AddWithValue("@ToDate", toDate);
                 cmd.ExecuteNonQuery();
 
-                Response.Write("<script>alert('Leave request rejected.')</script>");
-
-                // Refresh gridview
+                // Remove the rejected request from GridView
                 LoadLeaveRequests();
+
+                Response.Write("<script>alert('Leave request rejected.')</script>");
             }
             catch (Exception ex)
             {
@@ -165,7 +160,6 @@ namespace HRMS
                 conn.Close();
             }
         }
-
 
         //private void ApproveLeaveRequest(string empId, string fromDate, string toDate)
         //{
