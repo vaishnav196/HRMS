@@ -13,8 +13,8 @@
                     <asp:BoundField DataField="Month" HeaderText="Month" />
                     <asp:TemplateField HeaderText="Action">
                         <ItemTemplate>
-                            <asp:Button ID="btnDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("FilePath") %>' Text="Download" />
-                            <asp:Button ID="btnView" runat="server" CommandName="View" CommandArgument='<%# Eval("FilePath") %>' Text="View" />
+                            <asp:Button ID="btnDownload" runat="server" class="btn btn-sm px-2 py-2" CommandName="Download" CommandArgument='<%# Eval("FilePath") %>' Text="Download" />
+                            <asp:Button ID="btnView" runat="server"  class="btn btn-sm px-2 py-2" CommandName="View" CommandArgument='<%# Eval("FilePath") %>' Text="View" />
                         </ItemTemplate>
                         <ControlStyle BackColor="#FFCC66" BorderColor="#FFFFCC" BorderStyle="None" />
                     </asp:TemplateField>
