@@ -24,14 +24,24 @@
      <div class="collapse navbar-collapse" id="navbarSupportedContent">
          <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-             <a class="nav-link mx-5" href="ApplyLeave.aspx">Apply Leave</a>
+             <a class="nav-link " href="ApplyLeave.aspx">Apply Leave</a>
                 </li>
              <li class="nav-item">
-                 <a class="nav-link  btn mx-5" href="ViewPaySlip.aspx">ViewPayslip</a>
+                 <a class="nav-link  btn " href="ViewPaySlip.aspx">ViewPayslip</a>
              </li>
              <li class="nav-item">
-                 <a class="nav-link mx-5" href="ViewOfferLetter.aspx">ViewOfferLetter</a>
+                 <a class="nav-link " href="ViewOfferLetter.aspx">ViewOfferLetter</a>
             </li>
+
+             <li class="nav-item dropdown fw-bold">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tickets</a>
+                <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="RaiseTickets.aspx">Raise Ticket</a>
+                    <a class="dropdown-item" href="ViewTickets.aspx">View Ticket</a>
+                    <a class="dropdown-item" href="ViewSolutions.aspx">View Solution</a>
+                </div>
+                </li>
+
              <li class="nav-item">
                  <b><a class="nav-link me-5">Hello <asp:Label ID="Label1" runat="server" /></a></b>
              </li>

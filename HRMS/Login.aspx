@@ -61,6 +61,10 @@
                                 <asp:TextBox ID="TextBox7" runat="server" placeholder="Enter Password" Height="45px" Width="290px" TextMode="Password" class="form-control"></asp:TextBox>
                             </div>
                             <div class="mb-3">
+                                <label for="exampleDesignation" class="form-label">Designation</label>
+                                <asp:TextBox ID="TextBox8" runat="server" placeholder="Enter Designation" Height="45px" Width="290px" class="form-control"></asp:TextBox>
+                            </div>
+                            <div class="mb-3">
                                 <label for="exampleDateOfJoining" class="form-label">Date of Joining</label>
                                 <asp:TextBox ID="TextBox9" runat="server" placeholder="YYYY-MM-DD" Height="45px" Width="290px" class="form-control" TextMode="Date"></asp:TextBox>
                             </div>

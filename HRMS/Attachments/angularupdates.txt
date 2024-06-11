@@ -1,0 +1,23 @@
+jan 
+ng style and ng class are built in  attribute directive.
+directives are the instructions to dom or we can say used to manipulate dom
+ directives types
+component- normal componnents
+attribute- used to change apperiance or behaviour
+structural- used to change the dom layout  by adding or removing element -ngif,ng-for,ng-switch are built in structural directives.for using structural directive we use * to use it
+
+property binding ,interpolation,two way binding,event binding,two way binding,pipes custum pipes, template refernce varible
+
+ life cycle hooks are remianing in component
+life cycle hooks *** important
+oninit
+ondestroy
+onchanges
+after view init
+
+rxjx and routing is important***  
+
+forms template driven,validations required 
+formcontrols,dirty and touched and untouched,valid invalid,
+
+template driven and 

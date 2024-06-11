@@ -22,11 +22,12 @@ namespace HRMS
             string email = TextBox6.Text.Trim();
             string password = TextBox7.Text.Trim();
             DateTime dateOfJoining = DateTime.Parse(TextBox9.Text.Trim());
+            string designation = TextBox8.Text.Trim();
 
             string connectionString = ConfigurationManager.ConnectionStrings["hrms"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO Emp (Name, Contact, Email, Password, Role, DateOfJoining) VALUES (@Name, @Contact, @Email, @Password, 'User', @DateOfJoining); SELECT SCOPE_IDENTITY()";
+                string query = "INSERT INTO Emp (Name, Contact, Email, Password, Role, DateOfJoining, Designation) VALUES (@Name, @Contact, @Email, @Password, 'Employee', @DateOfJoining, @Designation); SELECT SCOPE_IDENTITY()";
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@Name", name);
@@ -34,6 +35,7 @@ namespace HRMS
                     cmd.Parameters.AddWithValue("@Email", email);
                     cmd.Parameters.AddWithValue("@Password", password);
                     cmd.Parameters.AddWithValue("@DateOfJoining", dateOfJoining);
+                    cmd.Parameters.AddWithValue("@Designation", designation);
 
                     try
                     {
@@ -45,9 +47,10 @@ namespace HRMS
                         Session["Email"] = email;
                         Session["Password"] = password;
                         Session["DateOfJoining"] = dateOfJoining;
+                        Session["Designation"] = designation;
                         Session["MyUser"] = email;
 
-                        Response.Write($"<script>alert('Employee registered Successfully !!!')</script>");
+                        Response.Write("<script>alert('Registered Successfully')</script>");
                         Response.Redirect("Login.aspx");
                     }
                     catch (Exception ex)
@@ -78,17 +81,19 @@ namespace HRMS
                     {
                         string role = rdr["Role"].ToString(); // Retrieve role as string
 
-                        if (em.Equals(rdr["Email"]) && pass.Equals(rdr["Password"]) && role == "User")
+                        if (em.Equals(rdr["Email"]) && pass.Equals(rdr["Password"]))
                         {
                             Session["MyUser"] = em;
                             Session["EmpID"] = rdr["EmpID"]; // Store EmpID in session
-                            Response.Redirect("UserHome.aspx");
-                        }
-                        else if (em.Equals(rdr["Email"]) && pass.Equals(rdr["Password"]) && role == "HR")
-                        {
-                            Session["MyUser"] = em;
-                            Session["EmpID"] = rdr["EmpID"]; // Store EmpID in session
-                            Response.Redirect("HRHome.aspx");
+
+                            if (role == "Employee")
+                            {
+                                Response.Redirect("UserHome.aspx");
+                            }
+                            else if (role == "admin")
+                            {
+                                Response.Redirect("HRHome.aspx");
+                            }
                         }
                     }
                 }
@@ -106,6 +111,5 @@ namespace HRMS
                 conn.Close();
             }
         }
-
     }
 }

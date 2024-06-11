@@ -193,9 +193,12 @@
     <Content Include="HRHome.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="PaySlipFormat.aspx" />
+    <Content Include="RaiseTickets.aspx" />
     <Content Include="UserHome.aspx" />
     <Content Include="ViewOfferLetter.aspx" />
     <Content Include="ViewPaySlip.aspx" />
+    <Content Include="ViewSolutions.aspx" />
+    <Content Include="ViewTickets.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -263,6 +266,13 @@
       <DependentUpon>PaySlipFormat.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RaiseTickets.aspx.cs">
+      <DependentUpon>RaiseTickets.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RaiseTickets.aspx.designer.cs">
+      <DependentUpon>RaiseTickets.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UserHome.aspx.cs">
       <DependentUpon>UserHome.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -284,6 +294,20 @@
     <Compile Include="ViewPaySlip.aspx.designer.cs">
       <DependentUpon>ViewPaySlip.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ViewSolutions.aspx.cs">
+      <DependentUpon>ViewSolutions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewSolutions.aspx.designer.cs">
+      <DependentUpon>ViewSolutions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewTickets.aspx.cs">
+      <DependentUpon>ViewTickets.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewTickets.aspx.designer.cs">
+      <DependentUpon>ViewTickets.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Emp.Master" />
@@ -297,6 +321,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Attachments\" />
     <Folder Include="Images\" />
     <Folder Include="OfferLetters\" />
     <Folder Include="PaySlips\" />
