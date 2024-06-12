@@ -2,30 +2,25 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        /* Center modal */
         .modal {
-            display: none; /* Hidden by default */
-            position: absolute; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            display: none;
+            position: absolute;
+            z-index: 1;
             right: 20%;
             top: 50%;
-            width: 80%; /* Full width */
-            height: 70%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            /*background-color: rgb(0, 0, 0);*/ /* Fallback color */
-            /*background-color: rgba(0, 0, 0, 0.4);*/ /* Black w/ opacity */
+            width: 80%;
+            height: 70%;
+            overflow: auto;
         }
 
-        /* Modal Content/Box */
         .modal-content {
             background-color: #fefefe;
-            margin: 15% 50%; /* 15% from the top and centered */
+            margin: 15% 50%;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
+            width: 80%;
         }
 
-        /* Close Button */
         .close {
             color: #aaa;
             float: right;
@@ -49,7 +44,7 @@
             <Columns>
                 <asp:BoundField DataField="TicketID" HeaderText="Ticket ID" />
                 <asp:BoundField DataField="RaisedByName" HeaderText="Raised By" />
-                <asp:BoundField DataField="TicketDescription" HeaderText="TicketDescription" />
+                <asp:BoundField DataField="TicketDescription" HeaderText="Ticket Description" />
                 <asp:BoundField DataField="Designation" HeaderText="Designation" />
                 <asp:TemplateField HeaderText="Action">
                     <ItemTemplate>
@@ -58,7 +53,7 @@
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Solution">
                     <ItemTemplate>
-                        <asp:LinkButton ID="btnOpenModal" runat="server" CommandName="OpenModal" Text="Submit Solution" CssClass="btn btn-info btn-sm px-3 py-2" OnClientClick="openModal(); return false;" />
+                        <asp:LinkButton ID="btnOpenModal" runat="server" CommandName="OpenModal" CommandArgument='<%# Eval("TicketID") %>' Text="Submit Solution" CssClass="btn btn-info btn-sm px-3 py-2" />
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>

@@ -19,13 +19,12 @@ namespace HRMS
 
         protected void BindTickets()
         {
-            // Get the current user's ID from session or authentication
-            int currentUserID = GetCurrentUserID(); // Implement this method according to your authentication mechanism
+            int currentUserID = GetCurrentUserID();
 
             string connectionString = ConfigurationManager.ConnectionStrings["hrms"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT TicketID, RaisedByName,TicketDescription, Designation, Attachment FROM Tickets WHERE RaisedTo = @UserID";
+                string query = "SELECT TicketID, RaisedByName, TicketDescription, Designation, Attachment FROM Tickets WHERE RaisedTo = @UserID";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@UserID", currentUserID);
@@ -49,7 +48,12 @@ namespace HRMS
                 Response.TransmitFile(Server.MapPath(filePath));
                 Response.End();
             }
-        
+            else if (e.CommandName == "OpenModal")
+            {
+                int ticketID = Convert.ToInt32(e.CommandArgument);
+                ViewState["TicketID"] = ticketID;
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModal", "openModal();", true);
+            }
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
@@ -64,8 +68,12 @@ namespace HRMS
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
-                        string insertQuery = "INSERT INTO ClosedTickets (TicketID, Description, Solution) " +
-                                             "SELECT TicketID, TicketDescription, @Solution FROM Tickets WHERE TicketID = @TicketID";
+
+                        // Insert into ClosedTickets
+                        string insertQuery = @"INSERT INTO ClosedTickets 
+                                               (TicketID, RaisedBy, RaisedByName, RaisedTo, RaisedToName, Designation, TicketDescription, Solution) 
+                                               SELECT TicketID, RaisedBy, RaisedByName, RaisedTo, RaisedToName, Designation, TicketDescription, @Solution 
+                                               FROM Tickets WHERE TicketID = @TicketID";
                         using (SqlCommand insertCommand = new SqlCommand(insertQuery, connection))
                         {
                             insertCommand.Parameters.AddWithValue("@TicketID", ticketID);
@@ -73,6 +81,7 @@ namespace HRMS
                             insertCommand.ExecuteNonQuery();
                         }
 
+                        // Delete from Tickets
                         string deleteQuery = "DELETE FROM Tickets WHERE TicketID = @TicketID";
                         using (SqlCommand deleteCommand = new SqlCommand(deleteQuery, connection))
                         {
@@ -87,11 +96,9 @@ namespace HRMS
             }
         }
 
-
         protected int GetCurrentUserID()
         {
-            int EmpId = int.Parse(Session["EmpId"].ToString());
-            return EmpId;
+            return int.Parse(Session["EmpId"].ToString());
         }
     }
 }
