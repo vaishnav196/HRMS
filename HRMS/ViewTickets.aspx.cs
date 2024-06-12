@@ -25,7 +25,7 @@ namespace HRMS
             string connectionString = ConfigurationManager.ConnectionStrings["hrms"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT TicketID, RaisedByName, RaisedToName, Designation, Attachment FROM Tickets WHERE RaisedTo = @UserID";
+                string query = "SELECT TicketID, RaisedByName,TicketDescription, Designation, Attachment FROM Tickets WHERE RaisedTo = @UserID";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@UserID", currentUserID);

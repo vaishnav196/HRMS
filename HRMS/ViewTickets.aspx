@@ -49,7 +49,7 @@
             <Columns>
                 <asp:BoundField DataField="TicketID" HeaderText="Ticket ID" />
                 <asp:BoundField DataField="RaisedByName" HeaderText="Raised By" />
-                <asp:BoundField DataField="RaisedToName" HeaderText="Raised To" />
+                <asp:BoundField DataField="TicketDescription" HeaderText="TicketDescription" />
                 <asp:BoundField DataField="Designation" HeaderText="Designation" />
                 <asp:TemplateField HeaderText="Action">
                     <ItemTemplate>
