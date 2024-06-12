@@ -29,7 +29,7 @@ namespace HRMS
 
         private void FetchEmployeeDetails(string empId)
         {
-            string connectionString = "Data Source=DESKTOP-567PV48\\SQLEXPRESS01;Initial Catalog=Hrms;Integrated Security=True;Encrypt=False"; // Replace with your actual connection string
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["hrms"].ConnectionString; // Replace with your actual connection string
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -84,7 +84,7 @@ namespace HRMS
 
         private void StoreOfferLetterMetadata(string empId, string name, string email, DateTime generatedDate, string filePath)
         {
-            string connectionString = "Data Source=DESKTOP-567PV48\\SQLEXPRESS01;Initial Catalog=Hrms;Integrated Security=True;Encrypt=False"; // Replace with your actual connection string
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["hrms"].ConnectionString; // Replace with your actual connection string
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

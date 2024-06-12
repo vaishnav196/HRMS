@@ -40,6 +40,7 @@ namespace HRMS
                 {
                     RejectLeaveRequest(empId, fromDate, toDate);
                 }
+                GridView1.DeleteRow(rowIndex);
             }
         }
 

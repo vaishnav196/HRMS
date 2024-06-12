@@ -41,8 +41,8 @@ namespace HRMS
                 // For now, just return an empty DataTable
                 return dt;
             }
-
-            using (var connection = new SqlConnection("Data Source=DESKTOP-567PV48\\SQLEXPRESS01;Initial Catalog=Hrms;Integrated Security=True;Encrypt=False"))
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["hrms"].ConnectionString;
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 var command = new SqlCommand("SELECT Id, GeneratedDate, FilePath FROM OfferLetters WHERE Email = @Email", connection);
