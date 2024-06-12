@@ -33,6 +33,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="GenerateOffer.aspx">Generate Offer Letter</a>
            </li>
+             <li class="nav-item">
+                 <a class="nav-link" href="ViewAllSolutions.aspx">All Ticket Solutions</a>
+            </li>
             <li class="nav-item">
                 <b><a class="nav-link">Welcome HR</a></b>
             </li>

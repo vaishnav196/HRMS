@@ -76,10 +76,12 @@ namespace HRMS
 
             // Store offer letter metadata in the database
             StoreOfferLetterMetadata(empId, name, email, DateTime.Now, filePath);
-
+            Response.Write("<script> alert('Offer Letter Sent On Your Email Successfully')</script>");
+           
             // Send email with attachment
             byte[] pdfBytes = File.ReadAllBytes(filePath);
             SendEmailWithAttachment(email, pdfBytes);
+            clear();
         }
 
         private void StoreOfferLetterMetadata(string empId, string name, string email, DateTime generatedDate, string filePath)
@@ -155,6 +157,15 @@ namespace HRMS
 
                 smtpClient.Send(mail);
             }
+        }
+
+        protected void clear()
+        {
+             txtEmpId.Text="";
+             txtName.Text="";
+             txtEmail.Text="";
+            txtDateOfJoining.Text="";
+             txtSalary.Text="";
         }
     }
 }

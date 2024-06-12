@@ -195,6 +195,7 @@
     <Content Include="PaySlipFormat.aspx" />
     <Content Include="RaiseTickets.aspx" />
     <Content Include="UserHome.aspx" />
+    <Content Include="ViewAllSolutions.aspx" />
     <Content Include="ViewOfferLetter.aspx" />
     <Content Include="ViewPaySlip.aspx" />
     <Content Include="ViewSolutions.aspx" />
@@ -279,6 +280,13 @@
     </Compile>
     <Compile Include="UserHome.aspx.designer.cs">
       <DependentUpon>UserHome.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewAllSolutions.aspx.cs">
+      <DependentUpon>ViewAllSolutions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewAllSolutions.aspx.designer.cs">
+      <DependentUpon>ViewAllSolutions.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewOfferLetter.aspx.cs">
       <DependentUpon>ViewOfferLetter.aspx</DependentUpon>
