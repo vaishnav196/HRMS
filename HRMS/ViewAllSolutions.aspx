@@ -4,6 +4,15 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
       <h1 class="text-center">View Closed Tickets</h1>
   <div class="container">
+        <div class="form-group">
+            <asp:Label ID="lblViewBy" runat="server" Text="View by:"></asp:Label>
+            <asp:DropDownList ID="ddlViewBy" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlViewBy_SelectedIndexChanged" CssClass="form-control w-50">
+                <asp:ListItem Text="Daily" Value="Daily"></asp:ListItem>
+                <asp:ListItem Text="Weekly" Value="Weekly"></asp:ListItem>
+                <asp:ListItem Text="Monthly" Value="Monthly"></asp:ListItem>
+            </asp:DropDownList>
+            <asp:Button ID="btnExport" runat="server" Text="Export to CSV" OnClick="btnExport_Click" CssClass="btn btn-primary float-right" />
+        </div>
       <asp:GridView ID="GridViewClosedTickets" runat="server" AutoGenerateColumns="False" DataKeyNames="TicketID" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3" Width="992px">
           <Columns>
               <asp:BoundField DataField="TicketID" HeaderText="Ticket ID" />
