@@ -14,6 +14,7 @@ namespace HRMS
         {
         }
 
+
         protected void getDetails_Click(object sender, EventArgs e)
         {
             string empNoValue = empNo.Text.Trim();
@@ -37,6 +38,35 @@ namespace HRMS
                     dateOfJoining.Text = reader["DateOfJoining"].ToString();
                     monthlySalary.Text = reader["Salary"].ToString();
                 }
+                reader.Close();
+
+                DateTime selectedDate = new DateTime(DateTime.Now.Year, month.SelectedIndex + 1, 1);
+                DateTime endDate = selectedDate.AddMonths(1).AddDays(-1); // Last day of the selected month
+
+                // Fetch absent days for the selected month
+                SqlCommand cmdAbsentDays = new SqlCommand(@"
+    SELECT ISNULL(SUM(AbsentDays), 0) AS TotalAbsentDays
+    FROM LeaveRequests
+    WHERE EmpID = @EmpNo
+      AND Status = 'Approved'
+", conn);
+
+                cmdAbsentDays.Parameters.AddWithValue("@EmpNo", empNoValue);
+
+                object totalAbsentDaysObj = cmdAbsentDays.ExecuteScalar();
+                if (totalAbsentDaysObj != DBNull.Value)
+                {
+                    int totalAbsentDays = Convert.ToInt32(totalAbsentDaysObj);
+                    leavesTaken.Text = totalAbsentDays.ToString();
+                    //leavesTaken.ReadOnly = true;
+                }
+                else
+                {
+                    leavesTaken.Text = "0";
+                    //leavesTaken.ReadOnly = true;
+                }              // Calculate total working days in the selected month
+                int totalDaysInMonth = DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month);
+                workingDays.Text = totalDaysInMonth.ToString();
             }
         }
 
@@ -84,27 +114,40 @@ namespace HRMS
 
             // Adding Employee details
             PdfPTable employeeTable = new PdfPTable(2);
-            employeeTable.WidthPercentage = 100;
+            employeeTable.WidthPercentage = 80;
 
             AddCellToTable(employeeTable, "NAME OF EMPLOYEE:", empName.Text);
+
             AddCellToTable(employeeTable, "DESIGNATION:", designation.Text);
+
             AddCellToTable(employeeTable, "BANK NAME:", bankName.Text);
+
             AddCellToTable(employeeTable, "EMPLOYEE EMAIL:", email.Text);
+
             AddCellToTable(employeeTable, "IFSC CODE:", "ICIC0000092");
+
             AddCellToTable(employeeTable, "DATE OF JOINING:", dateOfJoining.Text);
+
             AddCellToTable(employeeTable, "BANK ACCOUNT NO:", bankAccNo.Text);
+
             AddCellToTable(employeeTable, "CONTACT NO:", contactNo.Text);
+
             AddCellToTable(employeeTable, "PAN:", "FGKPB0088L");
+
             AddCellToTable(employeeTable, "DAYS IN MONTH:", workingDays.Text);
+
             AddCellToTable(employeeTable, "AADHAR:", "7902 8178 5003");
+
             AddCellToTable(employeeTable, "UAN:", "NA");
+
             AddCellToTable(employeeTable, "LEAVE TAKEN:", leavesTaken.Text);
+
 
             document.Add(employeeTable);
 
             // Adding Salary details
             PdfPTable salaryTable = new PdfPTable(3);
-            salaryTable.WidthPercentage = 100;
+            salaryTable.WidthPercentage = 80;
             salaryTable.SpacingBefore = 20f;
             salaryTable.SpacingAfter = 20f;
 
@@ -136,15 +179,15 @@ namespace HRMS
         private void AddCellToTable(PdfPTable table, string text1, string text2, string text3 = "")
         {
             PdfPCell cell1 = new PdfPCell(new Phrase(text1));
-            cell1.Border = Rectangle.NO_BORDER;
+            cell1.Border = Rectangle.BOX;
             table.AddCell(cell1);
 
             PdfPCell cell2 = new PdfPCell(new Phrase(text2));
-            cell2.Border = Rectangle.NO_BORDER;
+            cell2.Border = Rectangle.BOX;
             table.AddCell(cell2);
 
             PdfPCell cell3 = new PdfPCell(new Phrase(text3));
-            cell3.Border = Rectangle.NO_BORDER;
+            cell3.Border = Rectangle.BOX;
             table.AddCell(cell3);
         }
 
@@ -160,6 +203,7 @@ namespace HRMS
             client.Credentials = new System.Net.NetworkCredential("vaish00721@gmail.com", "kzuvycbbvbrdempp");
             client.EnableSsl = true;
             client.Send(mail);
+            ClientScript.RegisterStartupScript(GetType(), "alert", "alert('Payslip sent successfully!');", true);
         }
 
         private void SavePaySlipToDatabase(string pdfFilePath)
@@ -176,6 +220,19 @@ namespace HRMS
                 cmd.ExecuteNonQuery();
             }
         }
+        private int CalculateWorkingDays(DateTime startDate, DateTime endDate)
+        {
+            int workingDays = 0;
+            for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    workingDays++;
+                }
+            }
+            return workingDays;
+        }
+
     }
 }
 

@@ -3,8 +3,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <body>
-        <div class="container mt-5 pt-5">
+        <div class="container-fluid mt-5 pt-5">
     <h1 class="text-center text-danger">Welcome To Employees Leave Portal</h1>
+         
    
 </div>
     </body>
