@@ -8,13 +8,14 @@
         <div class="card-header">
             <h3 class="">Leave Approval</h3>
             <div class="">
-                <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" Width="1229px" OnRowCommand="GridView1_RowCommand" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black">
+                <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" Width="100%" OnRowCommand="GridView1_RowCommand" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black">
                     <Columns>
                         <asp:BoundField DataField="EmpID" HeaderText="Emp ID" />
                         <asp:BoundField DataField="Name" HeaderText="Name" />
                         <asp:BoundField DataField="Email" HeaderText="Email" />
                         <asp:BoundField DataField="FromDate" HeaderText="From" />
                         <asp:BoundField DataField="ToDate" HeaderText="To" />
+                        <asp:BoundField DataField="TotalDays" HeaderText="Total Days" />
                         <asp:BoundField DataField="AbsentDays" HeaderText="Absent Days" />
                         <asp:BoundField DataField="Status" HeaderText="Status" />
                         <asp:TemplateField HeaderText="Action">

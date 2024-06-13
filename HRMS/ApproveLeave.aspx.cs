@@ -40,7 +40,8 @@ namespace HRMS
                 {
                     RejectLeaveRequest(empId, fromDate, toDate);
                 }
-                GridView1.DeleteRow(rowIndex);
+
+                LoadLeaveRequests();
             }
         }
 
@@ -49,7 +50,7 @@ namespace HRMS
             try
             {
                 conn.Open();
-                string query = "SELECT EmpID, Name, Email, FromDate, ToDate, AbsentDays, Status FROM LeaveRequests WHERE Status = 'Pending'";
+                string query = "SELECT RequestID, EmpID, Name, Email, FromDate, ToDate, TotalDays, AbsentDays, Status FROM LeaveRequests WHERE Status = 'Pending'";
                 SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
@@ -72,13 +73,56 @@ namespace HRMS
             try
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE LeaveRequests SET Status = 'Approved' WHERE EmpID = @EmpID AND FromDate = @FromDate AND ToDate = @ToDate", conn);
-                cmd.Parameters.AddWithValue("@EmpID", empId);
-                cmd.Parameters.AddWithValue("@FromDate", fromDate);
-                cmd.Parameters.AddWithValue("@ToDate", toDate);
-                cmd.ExecuteNonQuery();
 
-                UpdateGridViewRow(empId, fromDate, toDate, "Approved");
+                string getDetailsQuery = @"
+                    SELECT e.LeaveBalance, lr.TotalDays, e.DateOfJoining
+                    FROM Emp e
+                    JOIN LeaveRequests lr ON e.EmpID = lr.EmpID
+                    WHERE e.EmpID = @EmpID AND lr.FromDate = @FromDate AND lr.ToDate = @ToDate";
+                SqlCommand getDetailsCmd = new SqlCommand(getDetailsQuery, conn);
+                getDetailsCmd.Parameters.AddWithValue("@EmpID", empId);
+                getDetailsCmd.Parameters.AddWithValue("@FromDate", fromDate);
+                getDetailsCmd.Parameters.AddWithValue("@ToDate", toDate);
+
+                SqlDataReader reader = getDetailsCmd.ExecuteReader();
+                if (!reader.Read())
+                {
+                    Response.Write("<script>alert('Employee or leave request not found.')</script>");
+                    return;
+                }
+
+                int currentLeaveBalance = reader.GetInt32(0);
+                int totalDays = reader.GetInt32(1);
+                DateTime dateOfJoining = reader.GetDateTime(2);
+                reader.Close();
+
+                int workingDays = CalculateWorkingDays(DateTime.Parse(fromDate), DateTime.Parse(toDate));
+
+                int monthsPassed = ((DateTime.Now.Year - dateOfJoining.Year) * 12) + DateTime.Now.Month - dateOfJoining.Month;
+                int maxLeaveDays = monthsPassed * 2;
+
+                int leaveDays = Math.Min(workingDays, maxLeaveDays);
+                int absentDays = workingDays - leaveDays;
+                int newLeaveBalance = currentLeaveBalance - leaveDays;
+
+                string updateLeaveQuery = @"
+                    UPDATE LeaveRequests
+                    SET Status = 'Approved', AbsentDays = @AbsentDays
+                    WHERE EmpID = @EmpID AND FromDate = @FromDate AND ToDate = @ToDate";
+                SqlCommand updateLeaveCmd = new SqlCommand(updateLeaveQuery, conn);
+                updateLeaveCmd.Parameters.AddWithValue("@AbsentDays", absentDays);
+                updateLeaveCmd.Parameters.AddWithValue("@EmpID", empId);
+                updateLeaveCmd.Parameters.AddWithValue("@FromDate", fromDate);
+                updateLeaveCmd.Parameters.AddWithValue("@ToDate", toDate);
+                updateLeaveCmd.ExecuteNonQuery();
+
+                string updateEmpQuery = "UPDATE Emp SET LeaveBalance = @NewLeaveBalance WHERE EmpID = @EmpID";
+                SqlCommand updateEmpCmd = new SqlCommand(updateEmpQuery, conn);
+                updateEmpCmd.Parameters.AddWithValue("@NewLeaveBalance", newLeaveBalance);
+                updateEmpCmd.Parameters.AddWithValue("@EmpID", empId);
+                updateEmpCmd.ExecuteNonQuery();
+
+                Response.Write("<script>alert('Leave approved successfully.')</script>");
             }
             catch (Exception ex)
             {
@@ -95,13 +139,17 @@ namespace HRMS
             try
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE LeaveRequests SET Status = 'Rejected' WHERE EmpID = @EmpID AND FromDate = @FromDate AND ToDate = @ToDate", conn);
-                cmd.Parameters.AddWithValue("@EmpID", empId);
-                cmd.Parameters.AddWithValue("@FromDate", fromDate);
-                cmd.Parameters.AddWithValue("@ToDate", toDate);
-                cmd.ExecuteNonQuery();
+                string updateLeaveQuery = @"
+                    UPDATE LeaveRequests
+                    SET Status = 'Rejected'
+                    WHERE EmpID = @EmpID AND FromDate = @FromDate AND ToDate = @ToDate";
+                SqlCommand updateLeaveCmd = new SqlCommand(updateLeaveQuery, conn);
+                updateLeaveCmd.Parameters.AddWithValue("@EmpID", empId);
+                updateLeaveCmd.Parameters.AddWithValue("@FromDate", fromDate);
+                updateLeaveCmd.Parameters.AddWithValue("@ToDate", toDate);
+                updateLeaveCmd.ExecuteNonQuery();
 
-                UpdateGridViewRow(empId, fromDate, toDate, "Rejected");
+                Response.Write("<script>alert('Leave rejected successfully.')</script>");
             }
             catch (Exception ex)
             {
@@ -113,16 +161,21 @@ namespace HRMS
             }
         }
 
-        private void UpdateGridViewRow(string empId, string fromDate, string toDate, string status)
+        private int CalculateWorkingDays(DateTime fromDate, DateTime toDate)
         {
-            foreach (GridViewRow row in GridView1.Rows)
+            int totalDays = (toDate - fromDate).Days + 1;
+            int workingDays = 0;
+
+            for (int i = 0; i < totalDays; i++)
             {
-                if (row.Cells[0].Text == empId && row.Cells[3].Text == fromDate && row.Cells[4].Text == toDate)
+                DateTime currentDate = fromDate.AddDays(i);
+                if (currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday)
                 {
-                    row.Cells[6].Text = status;
-                    break;
+                    workingDays++;
                 }
             }
+
+            return workingDays;
         }
     }
 }

@@ -50,8 +50,7 @@ namespace HRMS
             {
                 conn.Open();
 
-                // Fetch employee details
-                string getEmpDetailsQuery = "SELECT EmpID, Name, LeaveBalance, DateOfJoining FROM Emp WHERE Email = @Email";
+                string getEmpDetailsQuery = "SELECT EmpID, Name FROM Emp WHERE Email = @Email";
                 SqlCommand getEmpDetailsCmd = new SqlCommand(getEmpDetailsQuery, conn);
                 getEmpDetailsCmd.Parameters.AddWithValue("@Email", email);
 
@@ -64,27 +63,11 @@ namespace HRMS
 
                 int empId = reader.GetInt32(0);
                 string empName = reader.GetString(1);
-                int currentLeaveBalance = reader.GetInt32(2);
-                DateTime dateOfJoining = reader.GetDateTime(3);
                 reader.Close();
 
                 int totalDays = (toDate - fromDate).Days + 1;
                 int workingDays = CalculateWorkingDays(fromDate, toDate);
 
-                // Calculate accumulated leaves
-                int accumulatedLeaves = CalculateAccumulatedLeaves(dateOfJoining, DateTime.Now);
-
-                // Deduct leaves from accumulated balance
-                int newLeaveBalance = currentLeaveBalance - workingDays;
-                int absentDays = 0;
-
-                if (newLeaveBalance < 0)
-                {
-                    absentDays = Math.Abs(newLeaveBalance);
-                    newLeaveBalance = 0;
-                }
-
-                // Check if there's already a leave request for the same date range
                 string checkLeaveQuery = "SELECT COUNT(*) FROM LeaveRequests WHERE EmpID = @EmpID AND FromDate = @FromDate AND ToDate = @ToDate";
                 SqlCommand checkLeaveCmd = new SqlCommand(checkLeaveQuery, conn);
                 checkLeaveCmd.Parameters.AddWithValue("@EmpID", empId);
@@ -94,12 +77,11 @@ namespace HRMS
 
                 if (existingRequests > 0)
                 {
-                    // Update existing leave request
                     string updateLeaveQuery = "UPDATE LeaveRequests SET Reason = @Reason, TotalDays = @TotalDays, AbsentDays = @AbsentDays, Status = 'Pending' WHERE EmpID = @EmpID AND FromDate = @FromDate AND ToDate = @ToDate";
                     SqlCommand updateLeaveCmd = new SqlCommand(updateLeaveQuery, conn);
                     updateLeaveCmd.Parameters.AddWithValue("@Reason", reason);
                     updateLeaveCmd.Parameters.AddWithValue("@TotalDays", totalDays);
-                    updateLeaveCmd.Parameters.AddWithValue("@AbsentDays", absentDays);
+                    updateLeaveCmd.Parameters.AddWithValue("@AbsentDays", 0);
                     updateLeaveCmd.Parameters.AddWithValue("@EmpID", empId);
                     updateLeaveCmd.Parameters.AddWithValue("@FromDate", fromDate);
                     updateLeaveCmd.Parameters.AddWithValue("@ToDate", toDate);
@@ -107,7 +89,6 @@ namespace HRMS
                 }
                 else
                 {
-                    // Insert new leave request
                     string applyLeaveQuery = "INSERT INTO LeaveRequests (EmpID, Name, Email, FromDate, ToDate, Reason, TotalDays, AbsentDays, Status) VALUES (@EmpID, @Name, @Email, @FromDate, @ToDate, @Reason, @TotalDays, @AbsentDays, 'Pending')";
                     SqlCommand applyLeaveCmd = new SqlCommand(applyLeaveQuery, conn);
                     applyLeaveCmd.Parameters.AddWithValue("@EmpID", empId);
@@ -117,21 +98,9 @@ namespace HRMS
                     applyLeaveCmd.Parameters.AddWithValue("@ToDate", toDate);
                     applyLeaveCmd.Parameters.AddWithValue("@Reason", reason);
                     applyLeaveCmd.Parameters.AddWithValue("@TotalDays", totalDays);
-                    applyLeaveCmd.Parameters.AddWithValue("@AbsentDays", absentDays);
+                    applyLeaveCmd.Parameters.AddWithValue("@AbsentDays", 0);
                     applyLeaveCmd.ExecuteNonQuery();
                 }
-
-                // Update the leave balance in the employee record
-                string updateLeaveBalanceQuery = "UPDATE Emp SET LeaveBalance = @NewLeaveBalance WHERE EmpID = @EmpID";
-                SqlCommand updateLeaveBalanceCmd = new SqlCommand(updateLeaveBalanceQuery, conn);
-                updateLeaveBalanceCmd.Parameters.AddWithValue("@NewLeaveBalance", newLeaveBalance);
-                updateLeaveBalanceCmd.Parameters.AddWithValue("@EmpID", empId);
-                updateLeaveBalanceCmd.ExecuteNonQuery();
-
-                // Update the labels
-                Label1.Text = newLeaveBalance.ToString();
-                Label2.Text = absentDays.ToString();
-                LoadLeaveBalance();
 
                 Response.Write("<script>alert('Leave applied successfully.')</script>");
             }
@@ -143,8 +112,6 @@ namespace HRMS
             {
                 conn.Close();
             }
-
-            LoadLeaveBalance();
         }
 
         private void LoadLeaveBalance()
@@ -176,10 +143,7 @@ namespace HRMS
                 DateTime dateOfJoining = reader.GetDateTime(1);
                 reader.Close();
 
-                // Calculate accumulated leaves
                 int accumulatedLeaves = CalculateAccumulatedLeaves(dateOfJoining, DateTime.Now);
-
-                // Display the total leave balance
                 Label1.Text = (leaveBalance + accumulatedLeaves).ToString();
             }
             catch (Exception ex)
