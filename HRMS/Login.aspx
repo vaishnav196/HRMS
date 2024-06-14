@@ -224,6 +224,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
+    <style>
+        .bg-color{
+            background-color:cornsilk;
+        }
+    </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -255,12 +260,15 @@
         }
     </script>
 </head>
-<body class="bg-info py-5 px-5">
-    <form id="form1" runat="server" class="container ms-5 py-5 pl-5 w-75" style="background-color:ghostwhite; border-radius:25px ">
+<body class="bg-color py-5 px-5">
+    
+    <form id="form1" runat="server" class="container ms-5 py-5 pl-5 w-75" style="background-color:white; border-radius:25px ">
+
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         
         <div class="w-50 d-block my-5 mx-auto" style="font-family:Comic Sans MS; margin-left:30%; margin-top:100px">
-            <div style="margin-bottom:15px; font-weight:bolder">
+            <div style="margin-bottom:15px; font-weight:bolder" >
+                <img src="Images/Logo.png"  class="img-fluid p-0 " /> 
                 <h2 class="mt-5">Welcome to Employees!</h2>
             </div>
             <div style="padding:20px; border-radius:10%" class="card-part">

@@ -224,6 +224,7 @@
     <Compile Include="Emp.Master.designer.cs">
       <DependentUpon>Emp.Master</DependentUpon>
     </Compile>
+    <Compile Include="EncryptionHelper.cs" />
     <Compile Include="GenerateOffer.aspx.cs">
       <DependentUpon>GenerateOffer.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

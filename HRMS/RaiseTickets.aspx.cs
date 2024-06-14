@@ -67,7 +67,7 @@ namespace HRMS
             string attachment = null;
 
             if (FileUpload1.HasFile)
-            {
+            {   
                 try
                 {
                     string fileName = System.IO.Path.GetFileName(FileUpload1.PostedFile.FileName);
