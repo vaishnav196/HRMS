@@ -81,12 +81,6 @@ CREATE TABLE Tickets (
 
 CREATE TABLE ClosedTickets (
     TicketID INT PRIMARY KEY,
-    Description NVARCHAR(MAX),
-    Solution NVARCHAR(MAX)
-);
-
-CREATE TABLE ClosedTickets (
-    TicketID INT PRIMARY KEY,
     RaisedBy INT NOT NULL,
     RaisedByName NVARCHAR(100) NOT NULL,
     RaisedTo INT NOT NULL,
@@ -96,6 +90,10 @@ CREATE TABLE ClosedTickets (
     Solution NVARCHAR(MAX) NOT NULL,
     ClosedDate DATETIME DEFAULT GETDATE()
 );
+
+alter table ClosedTickets
+add RaisedDate DATETIME DEFAULT GETDATE();
+
 drop table ClosedTickets;
 
 select * from Tickets;
