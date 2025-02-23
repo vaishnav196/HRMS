@@ -23,6 +23,9 @@ The HRMS (Human Resource Management System) web application is built using .NET.
 ### HR Side:
 1. *Leave Management:*
    - Approve or reject leave applications.
+  
+### Authenication & Authorization:
+OTP generation and Sending OTP on Email
 
 2. *Document Generation:*
    - Generate offer letters.
