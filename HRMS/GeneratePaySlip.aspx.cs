@@ -200,7 +200,7 @@ namespace HRMS
             mail.Attachments.Add(new Attachment(pdfFilePath));
 
             SmtpClient client = new SmtpClient("smtp.gmail.com");
-            client.Credentials = new System.Net.NetworkCredential("vaish00721@gmail.com", "kzuvycbbvbrdempp");
+            client.Credentials = new System.Net.NetworkCredential("here email from which mail will be sent", "here password");
             client.EnableSsl = true;
             client.Send(mail);
             ClientScript.RegisterStartupScript(GetType(), "alert", "alert('Payslip sent successfully!');", true);
